@@ -1,0 +1,13 @@
+[env]
+DNSTOOL_MISE_ACTIVE = 'true'
+
+[settings]
+env_file = '.env'
+
+[tools]
+python = { version = '3.13.3' }
+bun = { version = '1.2.12' }
+node = { version = '23.11.0' }
+
+[tasks]
+'rules' = { run = '/usr/bin/env python3 scripts/rules.py' }
