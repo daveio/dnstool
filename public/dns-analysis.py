@@ -14,7 +14,7 @@ import re
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 # Check if rich library is available, use it for nice output if possible
 try:
@@ -122,15 +122,13 @@ def extract_domain_tld(domain: str) -> str:
         pattern = re.compile(r"([^.]+\." + re.escape(tld) + r")(\.|$)")
         match = pattern.search(domain)
         if match:
-            return match.group(1)
+            return match[1]
 
     # Extract the last two parts of the domain
     parts = domain.split(".")
-    if len(parts) >= 2:
-        return ".".join(parts[-2:])
 
-    # If all else fails, return the original domain
-    return domain
+    # Return the stripped domain or if all else fails, return the original domain
+    return ".".join(parts[-2:]) if len(parts) >= 2 else domain
 
 
 def parse_routeros_log(log_content: str) -> List[Dict[str, Any]]:
@@ -387,7 +385,7 @@ def cross_match_logs(
             )
 
     # Debug: Count blocked entries in combined data
-    blocked_count = sum(1 for entry in combined if entry.get("status") == "blocked")
+    blocked_count = sum(entry.get("status") == "blocked" for entry in combined)
     console.print(f"Total entries in combined data: {len(combined)}")
     console.print(f"Total blocked entries in combined data: {blocked_count}")
 
@@ -396,16 +394,10 @@ def cross_match_logs(
 
 def is_likely_non_suspicious(domain: str) -> bool:
     """Quick pre-filter to skip obviously non-suspicious domains."""
-    # Skip very common legitimate domains
-    for safe_domain in COMMON_SAFE_DOMAINS:
-        if domain.endswith(safe_domain):
-            return True
-
-    # Skip very short domains (likely legitimate)
-    if len(domain) < 8:
-        return True
-
-    return False
+    return next(
+        (True for safe_domain in COMMON_SAFE_DOMAINS if domain.endswith(safe_domain)),
+        len(domain) < 8,
+    )
 
 
 def check_suspicious_domains(
@@ -443,10 +435,7 @@ def check_suspicious_domains(
 
     # Check each domain against the patterns
     total_items = len(filtered_data)
-    processed = 0
-
-    for item in filtered_data:
-        processed += 1
+    for processed, item in enumerate(filtered_data, start=1):
         if processed % 100 == 0:
             print(f"\rChecked {processed}/{total_items} domains", end="")
 
@@ -650,13 +639,11 @@ def analyze_devices(data: List[Dict[str, Any]]) -> Dict[str, Any]:
 def generate_stats(data: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Generate overall statistics from the data."""
     total_queries = len(data)
-    unique_domains = len(set(item.get("domain") for item in data if item.get("domain")))
+    unique_domains = len({item.get("domain") for item in data if item.get("domain")})
     unique_base_domains = len(
-        set(item.get("base_domain") for item in data if item.get("base_domain"))
+        {item.get("base_domain") for item in data if item.get("base_domain")}
     )
-    unique_ips = len(
-        set(item.get("source_ip") for item in data if item.get("source_ip"))
-    )
+    unique_ips = len({item.get("source_ip") for item in data if item.get("source_ip")})
     console.print("Generating overall statistics...")
 
     # Count by source
@@ -724,13 +711,13 @@ def generate_stats(data: List[Dict[str, Any]]) -> Dict[str, Any]:
 def parse_blocklist(content: str) -> List[str]:
     """Parse blocklist and return list of regex patterns."""
     lines = content.strip().split("\n")
-    patterns = []
     console.print(f"Parsing blocklist with {len(lines)} lines...")
 
-    for line in lines:
-        if line.strip() and not line.strip().startswith("#"):
-            patterns.append(line.strip())
-
+    patterns = [
+        line.strip()
+        for line in lines
+        if line.strip() and not line.strip().startswith("#")
+    ]
     console.print(f"Extracted {len(patterns)} regex patterns from blocklist")
     return patterns
 
