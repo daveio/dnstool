@@ -13,12 +13,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <h1 className="text-xl font-bold">DNS Analysis Tool</h1>
           <ThemeToggle />
         </div>
       </header>
-      <main className="container py-6">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {!analysisData ? (
           <>
             <Instructions />
@@ -29,7 +29,7 @@ export default function Home() {
         )}
       </main>
       <footer className="border-t py-4">
-        <div className="container text-center text-sm text-muted-foreground">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
           DNS Analysis Tool &copy; {new Date().getFullYear()}
         </div>
       </footer>

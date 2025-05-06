@@ -42,7 +42,7 @@ export function Dashboard({ analysisData, onReset }: DashboardProps) {
         </Button>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="devices">Devices</TabsTrigger>
@@ -51,23 +51,23 @@ export function Dashboard({ analysisData, onReset }: DashboardProps) {
           <TabsTrigger value="suspicious">Suspicious</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6">
+        <TabsContent value="overview" className="mt-6 px-1">
           <StatsOverview stats={analysisData.stats} />
         </TabsContent>
 
-        <TabsContent value="devices" className="mt-6">
+        <TabsContent value="devices" className="mt-6 px-1">
           <DeviceBreakdown devices={analysisData.devices.devices} />
         </TabsContent>
 
-        <TabsContent value="domains" className="mt-6">
+        <TabsContent value="domains" className="mt-6 px-1">
           <DomainAnalysis relationships={analysisData.relationships} />
         </TabsContent>
 
-        <TabsContent value="timeline" className="mt-6">
+        <TabsContent value="timeline" className="mt-6 px-1">
           <TimeSeriesChart timeSeriesData={analysisData.time_series} />
         </TabsContent>
 
-        <TabsContent value="suspicious" className="mt-6">
+        <TabsContent value="suspicious" className="mt-6 px-1">
           <SuspiciousDomains domains={analysisData.suspicious_domains} />
         </TabsContent>
       </Tabs>

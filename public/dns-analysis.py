@@ -126,8 +126,6 @@ def extract_domain_tld(domain: str) -> str:
 
     # Extract the last two parts of the domain
     parts = domain.split(".")
-
-    # Return the stripped domain or if all else fails, return the original domain
     return ".".join(parts[-2:]) if len(parts) >= 2 else domain
 
 
