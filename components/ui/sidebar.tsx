@@ -116,9 +116,12 @@ const SidebarProvider = React.forwardRef<
               "--sidebar-width": SIDEBAR_WIDTH,
               "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
               ...style
-            } as React.CSSProperties
+            } as React.CSSProperties // Static styles in app/globals.css, dynamic custom properties inline
           }
-          className={cn("group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar", className)}
+          className={cn(
+            "sidebar-wrapper group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+            className
+          )}
           ref={ref}
           {...props}
         >
@@ -546,15 +549,7 @@ const SidebarMenuSkeleton = React.forwardRef<
       {...props}
     >
       {showIcon && <Skeleton className="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />}
-      <Skeleton
-        className="h-4 flex-1 max-w-[--skeleton-width]"
-        data-sidebar="menu-skeleton-text"
-        style={
-          {
-            "--skeleton-width": width
-          } as React.CSSProperties
-        }
-      />
+      <Skeleton className="h-4 flex-1 chart-tooltip-indicator" data-sidebar="menu-skeleton-text" style={{ width }} />
     </div>
   )
 })

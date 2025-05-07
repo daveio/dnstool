@@ -65,3 +65,49 @@
     @apply px-4 sm:px-6 lg:px-8 mx-auto;
   }
 }
+
+/* Extracted inlined CSS rules from components */
+
+/* Progress bar translation (for dynamic width, use inline style in React) */
+.progress-indicator {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  background: var(--primary);
+  transition: all 0.2s;
+}
+
+/* Chart legend color dot */
+.chart-legend-dot {
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Chart tooltip indicator */
+.chart-tooltip-indicator {
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Sidebar custom properties (for dynamic width, use inline style in React) */
+.sidebar-wrapper {
+  min-height: 100svh;
+  width: 100%;
+}
+
+/* Heatmap cell for alternate-dns-analyzer */
+.heatmap-cell {
+  height: 2rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+/* Progress bar static styles (dynamic width remains inline in React) */
+.progress-bar-width {
+  transition: width 0.2s;
+}

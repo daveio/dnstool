@@ -96,7 +96,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
                         <div
-                          className="h-full bg-primary"
+                          className="h-full bg-primary progress-bar-width"
                           style={{ width: `${(source.count / stats.total_queries) * 100}%` }}
                         />
                       </div>
@@ -123,7 +123,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
                         <div
-                          className={`h-full ${status.status === "blocked" ? "bg-destructive" : "bg-primary"}`}
+                          className={`h-full ${status.status === "blocked" ? "bg-destructive" : "bg-primary"} progress-bar-width`}
                           style={{ width: `${(status.count / stats.total_queries) * 100}%` }}
                         />
                       </div>
