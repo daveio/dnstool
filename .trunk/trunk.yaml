@@ -54,7 +54,7 @@ lint:
     - taplo@0.9.3
     - trunk-toolbox@0.5.4
     - actionlint@1.7.7
-    - checkov@3.2.415
+    - checkov@3.2.416
     - git-diff-check
     - markdownlint@0.44.0
     - prettier@3.5.3

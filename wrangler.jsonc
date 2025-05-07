@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "dnstool",
+  "name": "dnstool-dave-io",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-05-07",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -12,13 +12,13 @@
     {
       "binding": "WORKER_SELF_REFERENCE",
       // The service should match the "name" of your worker
-      "service": "dnstool",
+      "service": "dnstool-dave-io",
     },
   ],
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "dnstool-cache",
+      "bucket_name": "cache-dnstool-dave-io",
     },
   ],
   "observability": {
