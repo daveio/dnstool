@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
+      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <h1 className="text-xl font-bold">DNS Analysis Tool</h1>
           <ThemeToggle />
