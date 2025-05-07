@@ -2,6 +2,10 @@
 
 Tool for DNS analysis
 
+## Notes
+
+The blocklist is available from [`oisd.nl`](https://big.oisd.nl/regex).
+
 This is a [Next.js](https://nextjs.org) project.
 
 ## Getting Started
