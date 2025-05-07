@@ -101,13 +101,11 @@ export function DomainAnalysis({ relationships }: DomainAnalysisProps) {
                         <TableCell className="font-medium">{item.ip}</TableCell>
                         <TableCell>
                           <div className={expandedIpRows[item.ip] ? "" : "max-h-24 overflow-auto"}>
-                            {(expandedIpRows[item.ip] ? item.domains : item.domains.slice(0, 5)).map(
-                              (domain, index) => (
-                                <div key={index} className="text-sm">
-                                  {domain.domain} <span className="text-muted-foreground">({domain.count})</span>
-                                </div>
-                              )
-                            )}
+                            {(expandedIpRows[item.ip] ? item.domains : item.domains.slice(0, 5)).map((domain) => (
+                              <div key={domain.domain} className="text-sm">
+                                {domain.domain} <span className="text-muted-foreground">({domain.count})</span>
+                              </div>
+                            ))}
                             {!expandedIpRows[item.ip] && item.domains.length > 5 && (
                               <Button
                                 variant="ghost"
@@ -177,8 +175,8 @@ export function DomainAnalysis({ relationships }: DomainAnalysisProps) {
                         <TableCell className="font-medium">{item.domain}</TableCell>
                         <TableCell>
                           <div className={expandedDomainRows[item.domain] ? "" : "max-h-24 overflow-auto"}>
-                            {(expandedDomainRows[item.domain] ? item.ips : item.ips.slice(0, 5)).map((ip, index) => (
-                              <div key={index} className="text-sm">
+                            {(expandedDomainRows[item.domain] ? item.ips : item.ips.slice(0, 5)).map((ip) => (
+                              <div key={ip.ip} className="text-sm">
                                 {ip.ip} <span className="text-muted-foreground">({ip.count})</span>
                               </div>
                             ))}

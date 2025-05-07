@@ -7,11 +7,12 @@ import { SuspiciousDomains } from "@/components/suspicious-domains"
 import { TimeSeriesChart } from "@/components/time-series-chart"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import type { AnalysisData } from "@/lib/types"
 import { ArrowLeft, Download } from "lucide-react"
 import { useState } from "react"
 
 interface DashboardProps {
-  analysisData: any
+  analysisData: AnalysisData
   onReset: () => void
 }
 
@@ -20,7 +21,7 @@ export function Dashboard({ analysisData, onReset }: DashboardProps) {
 
   const downloadJson = () => {
     const dataStr = JSON.stringify(analysisData, null, 2)
-    const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr)
+    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`
     const exportFileDefaultName = "dns-analysis.json"
 
     const linkElement = document.createElement("a")

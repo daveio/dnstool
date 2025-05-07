@@ -72,8 +72,8 @@ export function SuspiciousDomains({ domains }: SuspiciousDomainsProps) {
               </TableHeader>
               <TableBody>
                 {filteredDomains.length > 0 ? (
-                  filteredDomains.map((domain, index) => (
-                    <TableRow key={index}>
+                  filteredDomains.map((domain) => (
+                    <TableRow key={`${domain.domain}-${domain.timestamp}-${domain.source_ip}`}>
                       <TableCell className="font-medium">{domain.domain}</TableCell>
                       <TableCell>{domain.source_ip}</TableCell>
                       <TableCell>

@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import type { AnalysisData } from "@/lib/types"
 import { AlertCircle, FileJson, UploadIcon } from "lucide-react"
 import { useState } from "react"
 
 interface UploadProps {
-  setAnalysisData: (data: any) => void
+  setAnalysisData: (data: AnalysisData) => void
   loading: boolean
   setLoading: (loading: boolean) => void
 }
@@ -21,16 +22,14 @@ export function Upload({ setAnalysisData, loading, setLoading }: UploadProps) {
   const [jsonFile, setJsonFile] = useState<File | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-
+    const file = e.target.files?.[0]
+    if (file) {
       // Validate file type
       if (!file.name.toLowerCase().endsWith(".json")) {
         setError("Please upload a JSON file.")
         setJsonFile(null)
         return
       }
-
       setJsonFile(file)
       setError(null)
     }

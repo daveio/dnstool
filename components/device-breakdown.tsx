@@ -98,8 +98,11 @@ export function DeviceBreakdown({ devices }: DeviceBreakdownProps) {
                     dataKey="value"
                     label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                   >
-                    {pieChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    {pieChartData.map((entry) => (
+                      <Cell
+                        key={entry.name}
+                        fill={COLORS[pieChartData.findIndex((e) => e.name === entry.name) % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />

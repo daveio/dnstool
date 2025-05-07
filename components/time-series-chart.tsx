@@ -87,8 +87,16 @@ export function TimeSeriesChart({ timeSeriesData }: TimeSeriesChartProps) {
                         nameKey="type"
                         label={({ type, percent }) => `${type}: ${(percent * 100).toFixed(0)}%`}
                       >
-                        {timeSeriesData.query_type_distribution.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        {timeSeriesData.query_type_distribution.map((entry) => (
+                          <Cell
+                            key={entry.type}
+                            fill={
+                              COLORS[
+                                timeSeriesData.query_type_distribution.findIndex((e) => e.type === entry.type) %
+                                  COLORS.length
+                              ]
+                            }
+                          />
                         ))}
                       </Pie>
                       <Tooltip />
