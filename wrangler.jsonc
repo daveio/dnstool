@@ -24,4 +24,10 @@
   "observability": {
     "enabled": true,
   },
+  "routes": [
+    {
+      "pattern": "dnstool.dave.io/*",
+      "zone_name": "dave.io",
+    },
+  ],
 }
