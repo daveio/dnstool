@@ -26,8 +26,8 @@
   },
   "routes": [
     {
-      "pattern": "dnstool.dave.io/*",
-      "zone_name": "dave.io",
+      "pattern": "dnstool.dave.io",
+      "custom_domain": true,
     },
   ],
 }
