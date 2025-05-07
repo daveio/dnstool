@@ -69,6 +69,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
   return (
     <style
+      /* trunk-ignore(biome/lint/security/noDangerouslySetInnerHtml) */
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(
