@@ -18,8 +18,18 @@ from typing import Any, Dict, List
 
 # Check if rich library is available, use it for nice output if possible
 try:
+    import concurrent.futures
+
     from rich.console import Console
     from rich.panel import Panel
+    from rich.progress import (
+        BarColumn,
+        Progress,
+        SpinnerColumn,
+        TextColumn,
+        TimeElapsedColumn,
+        TimeRemainingColumn,
+    )
 
     console = Console()
     RICH_AVAILABLE = True
@@ -232,10 +242,6 @@ def parse_nextdns_log(csv_content: str) -> List[Dict[str, Any]]:
         total_rows = len(rows)
         console.print(f"Processing {total_rows} rows from NextDNS CSV...")
 
-        # Print the header to debug
-        if rows:
-            console.print(f"CSV Headers: {list(rows[0].keys())}")
-
         blocked_count = 0
         for row in rows:
             try:
@@ -251,10 +257,6 @@ def parse_nextdns_log(csv_content: str) -> List[Dict[str, Any]]:
                     "source_ip": row.get("client_ip", ""),
                     "source": "nextdns",
                 }
-
-                # Debug the first few entries
-                if len(results) < 5:
-                    console.print(f"Sample entry: {entry}")
 
                 # Count blocked entries
                 if entry["status"] == "blocked":
@@ -293,63 +295,58 @@ def cross_match_logs(
     routeros_data: List[Dict[str, Any]], nextdns_data: List[Dict[str, Any]]
 ) -> List[Dict[str, Any]]:
     """Cross-match RouterOS and NextDNS logs based on domain and timestamp."""
+
+    def build_nextdns_map(nextdns_data):
+        nextdns_map = defaultdict(list)
+        for entry in nextdns_data:
+            domain = entry.get("domain")
+            if domain:
+                nextdns_map[domain].append(entry)
+        return nextdns_map
+
+    def find_closest_entry(router_entry, matching_entries):
+        router_time = datetime.fromisoformat(router_entry["timestamp"])
+        closest_entry = matching_entries[0]
+        min_time_diff = float("inf")
+        for next_entry in matching_entries:
+            try:
+                next_time = datetime.fromisoformat(next_entry["timestamp"])
+                time_diff = abs((next_time - router_time).total_seconds())
+                if time_diff < min_time_diff:
+                    min_time_diff = time_diff
+                    closest_entry = next_entry
+            except (ValueError, KeyError):
+                continue
+        return closest_entry
+
     combined = []
     total_entries = len(routeros_data)
     console.print(
         f"Cross-matching {total_entries} RouterOS entries with {len(nextdns_data)} NextDNS entries..."
     )
 
-    # Create a map of NextDNS entries by domain for faster lookup
-    nextdns_map = defaultdict(list)
-    for entry in nextdns_data:
-        domain = entry.get("domain")
-        if domain:
-            nextdns_map[domain].append(entry)
-
-    # Process RouterOS entries
+    nextdns_map = build_nextdns_map(nextdns_data)
     processed_domains = set()
     for router_entry in routeros_data:
         domain = router_entry.get("domain")
         if not domain:
             continue
-
         matching_entries = nextdns_map.get(domain, [])
-
         if matching_entries:
-            # Find the closest matching entry by timestamp
-            router_time = datetime.fromisoformat(router_entry["timestamp"])
-
-            closest_entry = matching_entries[0]
-            min_time_diff = float("inf")
-
-            for next_entry in matching_entries:
-                try:
-                    next_time = datetime.fromisoformat(next_entry["timestamp"])
-                    time_diff = abs((next_time - router_time).total_seconds())
-
-                    if time_diff < min_time_diff:
-                        min_time_diff = time_diff
-                        closest_entry = next_entry
-                except (ValueError, KeyError):
-                    continue
-
-            # Merge the entries - only keep essential fields
+            closest_entry = find_closest_entry(router_entry, matching_entries)
             merged_entry = {
                 "timestamp": router_entry["timestamp"],
                 "domain": domain,
                 "base_domain": router_entry.get("base_domain", ""),
                 "source_ip": router_entry.get("source_ip", ""),
                 "query_type": router_entry.get("query_type", ""),
-                "status": closest_entry.get(
-                    "status", "unknown"
-                ).lower(),  # Ensure status is lowercase
+                "status": closest_entry.get("status", "unknown").lower(),
                 "reasons": closest_entry.get("reasons", ""),
                 "source": "both",
             }
             combined.append(merged_entry)
             processed_domains.add(domain)
         else:
-            # No matching NextDNS entry - only keep essential fields
             combined.append(
                 {
                     "timestamp": router_entry["timestamp"],
@@ -361,8 +358,6 @@ def cross_match_logs(
                     "source": "routeros",
                 }
             )
-
-    # Add NextDNS entries that don't have a RouterOS match - only keep essential fields
     for next_entry in nextdns_data:
         domain = next_entry.get("domain")
         if domain and domain not in processed_domains:
@@ -371,22 +366,15 @@ def cross_match_logs(
                     "timestamp": next_entry.get("timestamp", ""),
                     "domain": domain,
                     "base_domain": next_entry.get("base_domain", ""),
-                    "source_ip": next_entry.get(
-                        "source_ip", ""
-                    ),  # Include source_ip from NextDNS
-                    "status": next_entry.get(
-                        "status", "unknown"
-                    ).lower(),  # Ensure status is lowercase
+                    "source_ip": next_entry.get("source_ip", ""),
+                    "status": next_entry.get("status", "unknown").lower(),
                     "reasons": next_entry.get("reasons", ""),
                     "source": "nextdns",
                 }
             )
-
-    # Debug: Count blocked entries in combined data
     blocked_count = sum(entry.get("status") == "blocked" for entry in combined)
     console.print(f"Total entries in combined data: {len(combined)}")
     console.print(f"Total blocked entries in combined data: {blocked_count}")
-
     return combined
 
 
@@ -431,34 +419,61 @@ def check_suspicious_domains(
 
     console.print(f"Compiled {len(compiled_patterns)} patterns")
 
-    # Check each domain against the patterns
-    total_items = len(filtered_data)
-    for processed, item in enumerate(filtered_data, start=1):
-        if processed % 100 == 0:
-            print(f"\rChecked {processed}/{total_items} domains", end="")
-
+    def check_domain(item):
         domain = item.get("domain", "")
         for pattern_info in compiled_patterns:
             try:
                 if pattern_info["regex"].search(domain):
-                    # If the domain matches a pattern and was allowed, it's suspicious
                     if item.get("status") != "blocked":
-                        # Only keep essential fields
-                        suspicious.append(
-                            {
-                                "timestamp": item.get("timestamp", ""),
-                                "domain": domain,
-                                "source_ip": item.get("source_ip", ""),
-                                "status": item.get("status", "unknown"),
-                                "matchedPattern": pattern_info["pattern"],
-                            }
-                        )
+                        return {
+                            "timestamp": item.get("timestamp", ""),
+                            "domain": domain,
+                            "source_ip": item.get("source_ip", ""),
+                            "status": item.get("status", "unknown"),
+                            "matchedPattern": pattern_info["pattern"],
+                        }
                     break
             except Exception:
-                # Skip this pattern if it causes an error
                 pass
+        return None
 
-    print(f"\rChecked {total_items}/{total_items} domains")
+    total_items = len(filtered_data)
+    suspicious = []
+    max_workers = min(16, (os.cpu_count() or 4))
+    if RICH_AVAILABLE:
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            "[progress.percentage]{task.percentage:>3.0f}%",
+            TimeElapsedColumn(),
+            TimeRemainingColumn(),
+            console=console,
+            transient=True,
+        ) as progress:
+            task = progress.add_task(
+                "[cyan]Checking suspicious domains...", total=total_items
+            )
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=max_workers
+            ) as executor:
+                futures = {
+                    executor.submit(check_domain, item): i
+                    for i, item in enumerate(filtered_data)
+                }
+                for _i, future in enumerate(concurrent.futures.as_completed(futures)):
+                    result = future.result()
+                    if result:
+                        suspicious.append(result)
+                    progress.update(task, advance=1)
+    else:
+        for processed, item in enumerate(filtered_data, start=1):
+            if processed % 100 == 0:
+                print(f"\rChecked {processed}/{total_items} domains", end="")
+            result = check_domain(item)
+            if result:
+                suspicious.append(result)
+        print(f"\rChecked {total_items}/{total_items} domains")
     console.print(f"Found {len(suspicious)} suspicious domains")
     return suspicious
 
