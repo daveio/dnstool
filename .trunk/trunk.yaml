@@ -17,7 +17,13 @@ runtimes:
     - python@3.10.8
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
+  disabled:
+    - eslint
   ignore:
+    - linters:
+        - ALL
+      paths:
+        - cloudflare-env.d.ts
     - linters:
         - prettier
       paths:

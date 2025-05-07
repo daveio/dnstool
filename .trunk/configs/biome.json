@@ -33,6 +33,12 @@
       "allowTrailingCommas": false
     }
   },
+  "jsonc": {
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {

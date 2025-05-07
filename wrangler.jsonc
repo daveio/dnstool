@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dnstool",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-05-07",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "DNSTOOL_ASSETS",
+    "directory": ".open-next/assets",
+  },
+  "observability": {
+    "enabled": true,
+  },
+}
