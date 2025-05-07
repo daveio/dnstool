@@ -5,9 +5,22 @@
   "compatibility_date": "2025-05-07",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
-    "binding": "DNSTOOL_ASSETS",
+    "binding": "ASSETS",
     "directory": ".open-next/assets",
   },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      // The service should match the "name" of your worker
+      "service": "dnstool",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "dnstool-cache",
+    },
+  ],
   "observability": {
     "enabled": true,
   },
