@@ -11,3 +11,4 @@ node = { version = '22.15.0' }
 
 [tasks]
 'rules' = { run = '/usr/bin/env python3 scripts/rules.py' }
+'deploy' = { run = 'pnpm run deploy' }
