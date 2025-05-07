@@ -25,6 +25,10 @@ lint:
       paths:
         - cloudflare-env.d.ts
     - linters:
+        - biome
+      paths:
+        - wrangler.jsonc
+    - linters:
         - prettier
       paths:
         - "**/*.css"

@@ -433,8 +433,8 @@ def check_suspicious_domains(
                             "matchedPattern": pattern_info["pattern"],
                         }
                     break
-            except Exception:
-                pass
+            except Exception as e:
+                console.print(f"Error checking domain '{domain}': {e}")
         return None
 
     total_items = len(filtered_data)
