@@ -3,7 +3,10 @@
   "name": "dnstool-dave-io",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-05-14",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": [
+    "nodejs_compat_populate_process_env",
+    "global_fetch_strictly_public",
+  ],
   "assets": {
     "binding": "ASSETS",
     "directory": ".open-next/assets",
