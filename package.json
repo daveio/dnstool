@@ -84,5 +84,5 @@
     "node": "~lts",
     "bun": "~1.2.13"
   },
-  "trustedDependencies": ["esbuild", "sharp", "unrs-resolver", "workerd"]
+  "trustedDependencies": ["@tailwindcss/oxide", "esbuild", "sharp", "unrs-resolver", "workerd"]
 }
