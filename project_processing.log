@@ -1,0 +1,7 @@
+[2025-05-15 14:01:58] Working in: /Users/dave/src/github.com/daveio/dnstool
+[2025-05-15 14:01:58] Removing node_modules directory
+[2025-05-15 14:02:03] Running initial 'bun install'
+[2025-05-15 14:02:07] Initial bun install successful
+[2025-05-15 14:02:07] Running 'bun pm trust --all'
+[2025-05-15 14:02:07] ERROR: bun pm trust failed with exit code 1
+[2025-05-15 14:02:07] Trust output: bun pm trust v1.2.13 (64ed68c9)  error: 0 scripts ran. This means all dependencies are already trusted or none have scripts.

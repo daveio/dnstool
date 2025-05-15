@@ -81,8 +81,14 @@
   },
   "packageManager": "bun@1.2.13",
   "engines": {
-    "node": "~lts",
-    "bun": "~1.2.13"
+    "bun": "~1.2.13",
+    "node": "~lts"
   },
-  "trustedDependencies": ["@tailwindcss/oxide", "esbuild", "sharp", "unrs-resolver", "workerd"]
+  "trustedDependencies": [
+    "@tailwindcss/oxide",
+    "esbuild",
+    "sharp",
+    "unrs-resolver",
+    "workerd"
+  ]
 }
