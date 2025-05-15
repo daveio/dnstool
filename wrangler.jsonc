@@ -4,6 +4,7 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-05-14",
   "compatibility_flags": [
+    "nodejs_compat",
     "nodejs_compat_populate_process_env",
     "global_fetch_strictly_public",
   ],
