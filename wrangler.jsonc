@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "dnstool-dave-io",
   "main": ".open-next/worker.js",
-  "compatibility_date": "2025-05-07",
+  "compatibility_date": "2025-05-14",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "binding": "ASSETS",
