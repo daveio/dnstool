@@ -77,7 +77,7 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3",
-    "wrangler": "^4.16.0"
+    "wrangler": "^4.16.1"
   },
   "packageManager": "bun@1.2.14",
   "engines": {
