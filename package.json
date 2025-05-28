@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
-    "@opennextjs/cloudflare": "~1.0.4",
+    "@opennextjs/cloudflare": "~1.1.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
@@ -63,13 +63,13 @@
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
-    "zod": "^3.25.30"
+    "zod": "^3.25.32"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250525.0",
+    "@cloudflare/workers-types": "^4.20250528.0",
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.1.7",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.23",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "eslint": "^9.27.0",
@@ -77,7 +77,7 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3",
-    "wrangler": "^4.16.1"
+    "wrangler": "^4.17.0"
   },
   "packageManager": "bun@1.2.14",
   "engines": {
